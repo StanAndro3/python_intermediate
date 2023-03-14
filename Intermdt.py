@@ -3,10 +3,12 @@
 
 """=========BEGIN HERE======"""
 import tkinter
+import rgb
 from tkinter import messagebox
 from tkinter import *
 import os
 import sys
+import thread6
 import sysconfig
 import pathlib
 import numpy as np
@@ -14,9 +16,9 @@ import mysql
 import mysql.connector
 import numpy as np
 root = Tk()
-root['bg'] = "grey"
-root.geometry="500*500"
-root.title = "my title"
+root['bg'] = "#062325"
+root.geometry:("1500*1500")
+root.title("CAR SALES PROGRAM")
 
 global car_name, amount_paid,car_year,car_color,fuel_capacity,manufacturer,serial_plate
 global no_of_doors, customer_name,customer_id,customer_phone
@@ -40,7 +42,11 @@ con = mysql.connector.Connect(host="localhost",
                                 password="",
                                 db="cardb")
 if con:
-    print("connected")
+    #@thread6.threaded
+    #def Consoleprint():
+        print("running...........")
+        print("connected to the database...")
+    #thread6.run_threaded(Consoleprint,thread6.running)    
 
 
 #what happens when register car button is pressed
@@ -61,8 +67,9 @@ def Register():#entering new record into the database
     csphone = customer_phone.get()
 
 #####################################
+
     con = mysql.connector.Connect(host="localhost", 
-                              port=3306, user="root",
+                            port=3306, user="root",
                                 password="",
                                 db="cardb")
     cur = con.cursor()
@@ -98,13 +105,13 @@ def Register():#entering new record into the database
     #    else: print("file not created")
     #print("before............................")
     #print(lsconv)
-    messagebox.showinfo(root,message="CAR RECORD MADE SUCCESSFULLY !!!")
+    messagebox.showinfo(message="CAR RECORD MADE SUCCESSFULLY !!!")
 
 
 
 
 
-def Find():#finding one record only # PLEASE REVISIT THIS !!!
+def Find():#finding one record only #
     cn = car_name.get()
     ap = amount_paid.get()
     cy = car_year.get()
@@ -158,7 +165,7 @@ def Find():#finding one record only # PLEASE REVISIT THIS !!!
         #else: print("file not created")
     #print("before............................")
     #print(rows)
-    messagebox.showinfo(root,message="CAR RECORD FOUND ARE AS FOLLOWS :!!!" + "\n" +str(showrows))
+    messagebox.showinfo(message="CAR RECORD FOUND ARE AS FOLLOWS :!!!" + "\n" +str(showrows))
 
 
 def Display():#Displaying all records
@@ -176,22 +183,30 @@ def Display():#Displaying all records
     con.close()
     #print("before............................")
     #print(rows)
-    messagebox.showinfo(root,message="ALL DATA !!!" + "\n" +str(showrows))
+    messagebox.showinfo(message="ALL DATA !!!" + "\n" +str(showrows))
 
 #++++++++++=======change this to file handler class method
 def Generate():
-#     con = mysql.connector.Connect(host="localhost", 
-                               # port="3306", user="root",
-                               # password="",
-                               # db="cardb")
-    #cur = con.cursor()
-    #query = "SELECT * FROM details"
-    #cur.execute(query)
-    #rows = cur.fetchall()
-    #con.commit()
-    #con.close()
-    #    messagebox.showinfo("no method exists")  
-    messagebox.showinfo("file created")
+     con = mysql.connector.Connect(host="localhost", 
+                                port="3306", user="root",
+                                password="",
+                                db="cardb")
+     cur = con.cursor()
+     query = "SELECT * FROM details"
+     cur.execute(query)
+     rows = cur.fetchall()
+     con.commit()
+     con.close()
+     #get current working directory
+     path = os.getcwd()
+    #    messagebox.showinfo("no method exists")
+
+     contents =str(np.array(rows))
+     filename = "cars data.txt"
+     fileopener = open(filename,"w")
+     fileopener.writelines(contents)
+     fileopener.close()   
+     messagebox.showinfo(message="file created at {}".format(path) )
 
 def UpDate():#update records from the database
     cn = car_name.get()
@@ -210,11 +225,11 @@ def UpDate():#update records from the database
                                 password="",
                                 db="cardb")
     cur = con.cursor()
-    query = "SET "
+    query = "SET cn='{0}',ap='{1} "
     cur.execute(query)
     con.commit()
     con.close()
-    messagebox.showinfo(root,message="SUCCESSFULLY UPDATED !!!")
+    messagebox.showinfo(message="SUCCESSFULLY UPDATED !!!")
 
 
 def Delt():#delete a record from database
@@ -242,64 +257,67 @@ def Delt():#delete a record from database
         #rows = cur.fetchall()
         con.commit()
         con.close()
-        messagebox.showinfo(root,message="DELETED SUCCESSFULLY  !!!")
+        messagebox.showinfo(message="DELETED SUCCESSFULLY  !!!")
     elif x is not True:
-        messagebox.showerror(root,message="DELETE ERROR")
+        messagebox.showerror(message="DELETE ERROR")
         
 
 #==========================FRONT END================================================================
 
-Label(root,text="WELCOME TO CAR SALES PROGRAM.",font="bold",foreground="yellow",background="black",height="3",width=900).pack()
-Label(root,text="CAR NAME",font="bold",foreground="aquamarine",background="purple",height="1").place(x=10,y=110)
+Label(root,text="WELCOME TO CAR SALES PROGRAM.",font="bold",foreground="yellow",background="#0E0624",height="3",width=900).pack()
+
+
+Label(root,text="CAR NAME",font="bold",foreground="aquamarine",background="#062325",height="1").place(x=10,y=110)
 Entry(root,text="",width="32",textvariable=car_name).place(x=10,y=150)
 
-
-Label(root,text="AMOUNT PAID",font="bold",foreground="aquamarine",background="purple",height="1").place(x=420,y=110)
+Label(root,text="AMOUNT PAID :(KSHS)",font="bold",foreground="aquamarine",background="#062325",height="1").place(x=420,y=110)
 Entry(root,width="32",textvariable=amount_paid,).place(x=420,y=150)
 
-Label(root,text="CUSTOMER NAME",font="bold",foreground="aquamarine",background="purple",height="1").place(x=800,y=110)
+Label(root,text="CUSTOMER NAME",font="bold",foreground="aquamarine",background="#062325",height="1").place(x=800,y=110)
 Entry(root,text="",width="32",textvariable=customer_name).place(x=800,y=150)
 
-Label(root,text="CAR COLOR",font="bold",foreground="aquamarine",background="purple",height="1").place(x=10,y=220)
+Label(root,text="CAR COLOR",font="bold",foreground="aquamarine",background="#062325",height="1").place(x=10,y=220)
 Entry(root,text="",width="32",textvariable=car_color).place(x=10,y=250)
 
 
-Label(root,text="CAR YEAR",font="bold",foreground="aquamarine",background="purple",height="1").place(x=420,y=220)
+Label(root,text="CAR YEAR",font="bold",foreground="aquamarine",background="#062325",height="1").place(x=420,y=220)
 Entry(root,text="",width="32",textvariable=car_year).place(x=420,y=250)
 
-Label(root,text="CUSTOMER ID",font="bold",foreground="aquamarine",background="purple",height="1").place(x=800,y=220)
+Label(root,text="CUSTOMER ID",font="bold",foreground="aquamarine",background="#062325",height="1").place(x=800,y=220)
 Entry(root,text="",width="32",textvariable=customer_id).place(x=800,y=250)
 
 
-Label(root,text="CAR FUEL CAPACITY",font="bold",foreground="aquamarine",background="purple",height="1").place(x=10,y=330)
-Entry(root,text="",width="32",textvariable=fuel_capacity).place(x=10,y=360)
+Label(root,text="CAR FUEL CAPACITY :(LITRES)",font="bold",foreground="aquamarine",background="#062325",height="1").place(x=10,y=330)
+Entry(root,text="",width="37",textvariable=fuel_capacity).place(x=10,y=360)
 
 
-Label(root,text="CAR MANUFACTURER",font="bold",foreground="aquamarine",background="purple",height="1").place(x=420,y=330)
+Label(root,text="CAR MANUFACTURER",font="bold",foreground="aquamarine",background="#062325",height="1").place(x=420,y=330)
 Entry(root,text="",width="32",textvariable=manufacturer).place(x=420,y=360)
 
-Label(root,text="CUSTOMER PHONE NUMBER",font="bold",foreground="aquamarine",background="purple",height="1").place(x=800,y=330)
-Entry(root,text="",width="32",textvariable=customer_phone).place(x=800,y=360)
+Label(root,text="CUSTOMER PHONE NUMBER",font="bold",foreground="aquamarine",background="#062325",height="1").place(x=800,y=330)
+Entry(root,text="",width="37",textvariable=customer_phone).place(x=800,y=360)
 
-Label(root,text="CAR SERIAL PLATE",font="bold",foreground="aquamarine",background="purple",height="1").place(x=10,y=440)
+
+
+Label(root,text="CAR SERIAL PLATE",font="bold",foreground="aquamarine",background="#062325",height="1").place(x=10,y=440)
 Entry(root,text="",width="32",textvariable=serial_plate).place(x=10,y=470)
 
 
-Label(root,text="NUMBER OF DOORS",font="bold",foreground="aquamarine",background="purple",height="1").place(x=420,y=440)
+Label(root,text="NUMBER OF DOORS",font="bold",foreground="aquamarine",background="#062325",height="1").place(x=420,y=440)
 Entry(root,text="",width="32",textvariable=no_of_doors).place(x=420,y=470)
 
 
-Button(root,text="REGISTER CAR",font="bold",foreground="black",background="BLUE",command=Register).place(x=10,y=550)
+Button(root,text="ENTER RECORD",font="bold",foreground="black",background="BLUE",command=Register).place(x=10,y=550)
 
 Button(root,text="FIND RECORD",font="bold",foreground="black",background="green",command=Find).place(x=10,y=600)
 
 Button(root,text="DISPLAY RECORD",font="bold",foreground="black",background="green",command=Display).place(x=200,y=550)
 
-Button(root,text="GENERATE SCRIPT",font="bold",foreground="black",background="yellow",command=Generate).place(x=220,y=600)
+Button(root,text="GENERATE SCRIPT",font="bold",foreground="black",background="yellow",command=Generate).place(x=200,y=600)
 
-Button(root,text="UPDATE RECORD",font="bold",foreground="black",background="orange",command=UpDate).place(x=450,y=550)
+Button(root,text="DELETE RECORD",font="bold",foreground="black",background="red",command=Delt).place(x=450,y=550)
 
-Button(root,text="DELETE RECORD",font="bold",foreground="black",background="red",command=Delt).place(x=450,y=600)
+#Button(root,text="DELETE RECORD",font="bold",foreground="black",background="red",command=Delt).place(x=450,y=600)
 
 Entry(root,background="black",width="900",disabledbackground="black").pack()
 

@@ -10,18 +10,18 @@ def Insert():
                               port=3306, user="root",
                                 password="",
                                 db="testdb")
-    query = "INSERT INTO tb values"
+    #query = "INSERT INTO tb values"
     cur = con.cursor()
-    cur.execute(query)
-    con.commit()
+    #cur.execute(query)
+    #con.commit()
     con.close()
 def Show():
-    
+    n = name.get()
     messagebox.showinfo(message="hello"+ n)
     
 
 
-
+name = StringVar()
 master = Tk()
 master.geometry ="1600*1600"
 master['bg'] = "grey"
@@ -32,7 +32,7 @@ master['bg'] = "grey"
 Label(master,text="sales").pack()
 
 Label(master,text="name").place(x=100,y=100)
-Entry(master,text="",textvariable="name",width='19',borderwidth="6",).place(x=100,y=150)
+Entry(master,text="",textvariable=name,width='19',borderwidth="6",).place(x=100,y=150)
 
 Button(master,text="ENTER",width='10',command=Show).place(x=100,y=300)
 
