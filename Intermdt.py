@@ -1,7 +1,10 @@
-#this should be the intermediate file for release
-#still on trial release
+#intermediate file for release
+#on trial release
 
 """=========BEGIN HERE======"""
+#import python [tkinter ] graphical library
+#import os tools for I/O
+#import mysql tools for database connection and querying 
 import tkinter
 import rgb
 from tkinter import messagebox
@@ -15,11 +18,16 @@ import numpy as np
 import mysql
 import mysql.connector
 import numpy as np
+#main window given name root.//Master
 root = Tk()
+#background color for the window
 root['bg'] = "#062325"
+#set window size
 root.geometry:("1500*1500")
+#set window title name
 root.title("CAR SALES PROGRAM")
 
+#declare variables as global: access Public: True: 
 global car_name, amount_paid,car_year,car_color,fuel_capacity,manufacturer,serial_plate
 global no_of_doors, customer_name,customer_id,customer_phone
 
@@ -53,7 +61,7 @@ if con:
 def Register():#entering new record into the database
     ##REVISITED
     #get all variables
-
+    #getter methods :Data accessors
     cn = car_name.get()
     ap = amount_paid.get()
     cy = car_year.get()
@@ -185,7 +193,7 @@ def Display():#Displaying all records
     #print(rows)
     messagebox.showinfo(message="ALL DATA !!!" + "\n" +str(showrows))
 
-#++++++++++=======change this to file handler class method
+#++++++++++=======File handler Button Function =========++++++#
 def Generate():
      con = mysql.connector.Connect(host="localhost", 
                                 port="3306", user="root",
@@ -225,7 +233,7 @@ def UpDate():#update records from the database
                                 password="",
                                 db="cardb")
     cur = con.cursor()
-    query = "SET cn='{0}',ap='{1} "
+    query = "SET cn='{0}',ap='{1} where cn='{2}'=='{3}' ".format(cn,ap,cn,ap)
     cur.execute(query)
     con.commit()
     con.close()
@@ -254,7 +262,6 @@ def Delt():#delete a record from database
     x = messagebox.askyesno(message="are you sure you want to delete this customer???")
     if x ==True:
         cur.execute(query)
-        #rows = cur.fetchall()
         con.commit()
         con.close()
         messagebox.showinfo(message="DELETED SUCCESSFULLY  !!!")
@@ -262,59 +269,67 @@ def Delt():#delete a record from database
         messagebox.showerror(message="DELETE ERROR")
         
 
-#==========================FRONT END================================================================
+#==========================FRONT END======== LAYOUT ==================================
 
 Label(root,text="WELCOME TO CAR SALES PROGRAM.",font="bold",foreground="yellow",background="#0E0624",height="3",width=900).pack()
 
-
+#name capture
 Label(root,text="CAR NAME",font="bold",foreground="aquamarine",background="#062325",height="1").place(x=10,y=110)
 Entry(root,text="",width="32",textvariable=car_name).place(x=10,y=150)
 
+#amount capture
 Label(root,text="AMOUNT PAID :(KSHS)",font="bold",foreground="aquamarine",background="#062325",height="1").place(x=420,y=110)
 Entry(root,width="32",textvariable=amount_paid,).place(x=420,y=150)
 
+#customer name capture
 Label(root,text="CUSTOMER NAME",font="bold",foreground="aquamarine",background="#062325",height="1").place(x=800,y=110)
 Entry(root,text="",width="32",textvariable=customer_name).place(x=800,y=150)
 
+#car color capture
 Label(root,text="CAR COLOR",font="bold",foreground="aquamarine",background="#062325",height="1").place(x=10,y=220)
 Entry(root,text="",width="32",textvariable=car_color).place(x=10,y=250)
 
-
+#car year capture
 Label(root,text="CAR YEAR",font="bold",foreground="aquamarine",background="#062325",height="1").place(x=420,y=220)
 Entry(root,text="",width="32",textvariable=car_year).place(x=420,y=250)
 
+#customer id capture
 Label(root,text="CUSTOMER ID",font="bold",foreground="aquamarine",background="#062325",height="1").place(x=800,y=220)
 Entry(root,text="",width="32",textvariable=customer_id).place(x=800,y=250)
 
-
+#car fuel capacity capture
 Label(root,text="CAR FUEL CAPACITY :(LITRES)",font="bold",foreground="aquamarine",background="#062325",height="1").place(x=10,y=330)
 Entry(root,text="",width="37",textvariable=fuel_capacity).place(x=10,y=360)
 
-
+#car manufacturer capture
 Label(root,text="CAR MANUFACTURER",font="bold",foreground="aquamarine",background="#062325",height="1").place(x=420,y=330)
 Entry(root,text="",width="32",textvariable=manufacturer).place(x=420,y=360)
 
+#customer phone number capture
 Label(root,text="CUSTOMER PHONE NUMBER",font="bold",foreground="aquamarine",background="#062325",height="1").place(x=800,y=330)
 Entry(root,text="",width="37",textvariable=customer_phone).place(x=800,y=360)
 
-
-
+#car serial plate capture
 Label(root,text="CAR SERIAL PLATE",font="bold",foreground="aquamarine",background="#062325",height="1").place(x=10,y=440)
 Entry(root,text="",width="32",textvariable=serial_plate).place(x=10,y=470)
 
-
+#car number of doors capture
 Label(root,text="NUMBER OF DOORS",font="bold",foreground="aquamarine",background="#062325",height="1").place(x=420,y=440)
 Entry(root,text="",width="32",textvariable=no_of_doors).place(x=420,y=470)
 
-
+#button commit record to database
 Button(root,text="ENTER RECORD",font="bold",foreground="black",background="BLUE",command=Register).place(x=10,y=550)
 
+#button find record from database
 Button(root,text="FIND RECORD",font="bold",foreground="black",background="green",command=Find).place(x=10,y=600)
 
+#button fetch all records from database
 Button(root,text="DISPLAY RECORD",font="bold",foreground="black",background="green",command=Display).place(x=200,y=550)
 
+#button generate script
 Button(root,text="GENERATE SCRIPT",font="bold",foreground="black",background="yellow",command=Generate).place(x=200,y=600)
 
+#button delete record from database
 Button(root,text="DELETE RECORD",font="bold",foreground="black",background="red",command=Delt).place(x=450,y=550)
 
 #Button(root,text="DELETE RECORD",font="bold",foreground="black",background="red",command=Delt).place(x=450,y=600)
