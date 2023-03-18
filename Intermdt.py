@@ -1,5 +1,6 @@
 #intermediate file for release
 #on trial release
+#PYTHON 3.10.10
 
 """=========BEGIN HERE======"""
 #import python [tkinter ] graphical library
@@ -21,7 +22,7 @@ import numpy as np
 #main window given name root.//Master
 root = Tk()
 #background color for the window
-root['bg'] = "#062325"
+root['bg'] = "#062325" #GUN METAL
 #set window size
 root.geometry:("1500*1500")
 #set window title name
